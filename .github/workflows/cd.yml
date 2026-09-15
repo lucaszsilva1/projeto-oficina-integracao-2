@@ -21,6 +21,7 @@ jobs:
   build-and-deploy-pages:
     name: Build e Deploy (GitHub Pages)
     runs-on: ubuntu-latest
+    if: hashFiles('package.json') != ''
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -31,11 +32,15 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 22
 
       - name: Instalar dependencias
-        run: npm ci || npm install
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: Compilar aplicacao para producao
         run: npm run build --if-present

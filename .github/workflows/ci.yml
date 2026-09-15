@@ -25,17 +25,28 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 22
 
       - name: Instalar dependencias
-        run: npm ci || npm install
+        if: hashFiles('package.json') != ''
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: Verificacao de Formatacao e Lint
+        if: hashFiles('package.json') != ''
         run: npm run lint --if-present
 
       - name: Checagem estatica de tipos (TypeScript)
+        if: hashFiles('package.json') != ''
         run: npm run typecheck --if-present
+
+      - name: Status do ambiente (pre-setup)
+        if: hashFiles('package.json') == ''
+        run: echo "Repositório em fase de especificação inicial. package.json pendente (Tarefa T001)."
 
   test:
     name: Testes Unitarios e Cobertura
@@ -47,23 +58,33 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 22
 
       - name: Instalar dependencias
-        run: npm ci || npm install
+        if: hashFiles('package.json') != ''
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: Executar testes automatizados (Vitest)
+        if: hashFiles('package.json') != ''
         run: npm test -- --run --coverage || npm test -- --run || echo "Nenhum teste configurado ainda"
 
       - name: Armazenar relatorio de cobertura
+        if: hashFiles('coverage/**') != ''
         uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: coverage-report
           path: coverage/
           retention-days: 7
         continue-on-error: true
+
+      - name: Status dos testes (pre-setup)
+        if: hashFiles('package.json') == ''
+        run: echo "Nenhum teste para executar ainda (aguardando T004/T012)."
 
   build:
     name: Build da Aplicacao
@@ -76,19 +97,30 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 22
 
       - name: Instalar dependencias
-        run: npm ci || npm install
+        if: hashFiles('package.json') != ''
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: Compilar aplicacao para producao (Vite)
+        if: hashFiles('package.json') != ''
         run: npm run build --if-present
 
       - name: Salvar artefato de build (dist)
+        if: hashFiles('dist/**') != ''
         uses: actions/upload-artifact@v4
         with:
           name: dist-artifact
           path: dist/
           retention-days: 7
         continue-on-error: true
+
+      - name: Status da compilação (pre-setup)
+        if: hashFiles('package.json') == ''
+        run: echo "Build ignorado: package.json ainda não criado (aguardando T001)."
