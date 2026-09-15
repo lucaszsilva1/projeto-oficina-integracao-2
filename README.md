@@ -5,6 +5,9 @@ Ferramenta educacional para ensinar **lógica de programação por meio da visua
 O projeto transforma uma solução escrita em **Portugol**, linguagem de entrada pedagógica, em uma **Representação Intermediária (IR)** e, a partir dela, apresenta a lógica em **blocos visuais, explicações didáticas e código Arduino**.
 
 > **Ideia → Portugol → IR → Blocos + Explicação + Arduino**
+>
+> <img width="1024" height="765" alt="image" src="https://github.com/user-attachments/assets/53dc9276-d309-4579-8448-c06a1624e2d8" />
+
 
 ---
 
