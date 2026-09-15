@@ -28,25 +28,32 @@ jobs:
           node-version: 22
 
       - name: Instalar dependencias
-        if: hashFiles('package.json') != ''
         run: |
-          if [ -f package-lock.json ]; then
-            npm ci
+          if [ -f package.json ]; then
+            if [ -f package-lock.json ]; then
+              npm ci
+            else
+              npm install
+            fi
           else
-            npm install
+            echo "package.json ainda não criado (aguardando T001)."
           fi
 
       - name: Verificacao de Formatacao e Lint
-        if: hashFiles('package.json') != ''
-        run: npm run lint --if-present
+        run: |
+          if [ -f package.json ]; then
+            npm run lint --if-present
+          else
+            echo "Lint ignorado: aguardando configuracao do projeto."
+          fi
 
       - name: Checagem estatica de tipos (TypeScript)
-        if: hashFiles('package.json') != ''
-        run: npm run typecheck --if-present
-
-      - name: Status do ambiente (pre-setup)
-        if: hashFiles('package.json') == ''
-        run: echo "Repositório em fase de especificação inicial. package.json pendente (Tarefa T001)."
+        run: |
+          if [ -f package.json ]; then
+            npm run typecheck --if-present
+          else
+            echo "Typecheck ignorado: aguardando configuracao do projeto."
+          fi
 
   test:
     name: Testes Unitarios e Cobertura
@@ -61,30 +68,33 @@ jobs:
           node-version: 22
 
       - name: Instalar dependencias
-        if: hashFiles('package.json') != ''
         run: |
-          if [ -f package-lock.json ]; then
-            npm ci
+          if [ -f package.json ]; then
+            if [ -f package-lock.json ]; then
+              npm ci
+            else
+              npm install
+            fi
           else
-            npm install
+            echo "package.json ainda não criado (aguardando T001)."
           fi
 
       - name: Executar testes automatizados (Vitest)
-        if: hashFiles('package.json') != ''
-        run: npm test -- --run --coverage || npm test -- --run || echo "Nenhum teste configurado ainda"
+        run: |
+          if [ -f package.json ]; then
+            npm test -- --run --coverage || npm test -- --run || echo "Nenhum teste configurado ainda"
+          else
+            echo "Testes ignorados: aguardando suites de testes (T004/T012)."
+          fi
 
       - name: Armazenar relatorio de cobertura
-        if: hashFiles('coverage/**') != ''
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage/
           retention-days: 7
         continue-on-error: true
-
-      - name: Status dos testes (pre-setup)
-        if: hashFiles('package.json') == ''
-        run: echo "Nenhum teste para executar ainda (aguardando T004/T012)."
 
   build:
     name: Build da Aplicacao
@@ -100,27 +110,30 @@ jobs:
           node-version: 22
 
       - name: Instalar dependencias
-        if: hashFiles('package.json') != ''
         run: |
-          if [ -f package-lock.json ]; then
-            npm ci
+          if [ -f package.json ]; then
+            if [ -f package-lock.json ]; then
+              npm ci
+            else
+              npm install
+            fi
           else
-            npm install
+            echo "package.json ainda não criado (aguardando T001)."
           fi
 
       - name: Compilar aplicacao para producao (Vite)
-        if: hashFiles('package.json') != ''
-        run: npm run build --if-present
+        run: |
+          if [ -f package.json ]; then
+            npm run build --if-present
+          else
+            echo "Build ignorado: aguardando setup da aplicacao (T001)."
+          fi
 
       - name: Salvar artefato de build (dist)
-        if: hashFiles('dist/**') != ''
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: dist-artifact
           path: dist/
           retention-days: 7
         continue-on-error: true
-
-      - name: Status da compilação (pre-setup)
-        if: hashFiles('package.json') == ''
-        run: echo "Build ignorado: package.json ainda não criado (aguardando T001)."

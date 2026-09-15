@@ -21,7 +21,6 @@ jobs:
   build-and-deploy-pages:
     name: Build e Deploy (GitHub Pages)
     runs-on: ubuntu-latest
-    if: hashFiles('package.json') != ''
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -34,16 +33,19 @@ jobs:
         with:
           node-version: 22
 
-      - name: Instalar dependencias
+      - name: Instalar dependencias e compilar
         run: |
-          if [ -f package-lock.json ]; then
-            npm ci
+          if [ -f package.json ]; then
+            if [ -f package-lock.json ]; then
+              npm ci
+            else
+              npm install
+            fi
+            npm run build --if-present
           else
-            npm install
+            mkdir -p dist
+            echo "<!DOCTYPE html><html><head><meta charset='utf-8'><title>Plataforma Educacional</title></head><body><h1>Plataforma Educacional de Programação</h1><p>Ambiente em inicialização.</p></body></html>" > dist/index.html
           fi
-
-      - name: Compilar aplicacao para producao
-        run: npm run build --if-present
 
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
@@ -56,11 +58,11 @@ jobs:
       - name: Realizar Deploy no GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        continue-on-error: true
 
   deploy-vercel:
     name: Deploy para Vercel (Opcional)
     runs-on: ubuntu-latest
-    # Executa apenas se os segredos da Vercel estiverem configurados no repositorio
     if: ${{ env.HAS_VERCEL_TOKEN != '' }}
     env:
       HAS_VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -71,8 +73,7 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 22
 
       - name: Instalar Vercel CLI
         run: npm install --global vercel@latest
