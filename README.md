@@ -1,179 +1,273 @@
-# Plataforma Educacional de Programação
+# Arduino Blocks
 
-Ferramenta educacional para ensinar **lógica de programação por meio da visualização e interpretação de código**, conectando diferentes formas de representar uma mesma lógica.
+Plataforma educacional para ensino de **lógica de programação através de blocos visuais**, utilizando a linguagem **Arduino** como representação técnica do código.
 
-O projeto transforma uma solução escrita em **Portugol**, linguagem de entrada pedagógica, em uma **Representação Intermediária (IR)** e, a partir dela, apresenta a lógica em **blocos visuais, explicações didáticas e código Arduino**.
+A aplicação permite que alunos criem seus próprios workspaces, escrevam e visualizem código, salvem seus projetos e retornem posteriormente para continuar o desenvolvimento.
 
-> **Ideia → Portugol → IR → Blocos + Explicação + Arduino**
->
-> <img width="1024" height="765" alt="image" src="https://github.com/user-attachments/assets/53dc9276-d309-4579-8448-c06a1624e2d8" />
-
+A plataforma também possui uma área administrativa para gerenciamento dos alunos.
 
 ---
 
 ## 🎯 Objetivo
 
-Facilitar o aprendizado de programação para **crianças, jovens e iniciantes**, permitindo que o estudante compreenda não apenas _o que escrever_, mas principalmente **o que o código significa**.
+Facilitar o aprendizado de programação para **crianças, jovens e iniciantes**, utilizando uma abordagem visual e progressiva.
 
-A aplicação utiliza uma abordagem inspirada no **Método de Feynman**:
-
-> Se o estudante consegue explicar uma lógica de programação de forma simples, ele provavelmente compreendeu o conceito.
-
-O foco do projeto não é criar uma IDE completa, mas oferecer uma ferramenta de **visualização, interpretação e aprendizagem de lógica de programação**.
-
----
-
-## 🔄 Fluxo da aplicação
+O sistema transforma a lógica de programação em uma experiência visual:
 
 ```text
-┌──────────────────┐
-│     PORTUGOL     │
-│ Entrada          │
-│ pedagógica      │
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────┐
-│      PARSER      │
-│ Análise sintática│
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────┐
-│       IR         │
-│ Representação    │
-│ semântica central│
-└───────┬──────────┘
-        │
-   ┌────┼──────────────┐
-   ▼    ▼              ▼
-┌─────┐ ┌──────────┐ ┌──────────┐
-│Blocos│ │Explicação│ │ Arduino  │
-│Blockly│ │Didática │ │ Técnico  │
-└─────┘ └──────────┘ └──────────┘
+IDEIA
+  ↓
+CÓDIGO
+  ↓
+REPRESENTAÇÃO SEMÂNTICA
+  ↓
+BLOCOS VISUAIS
+  ↓
+ARDUINO
 ```
 
-### Papéis de cada representação
-
-| Representação  | Função                                              |
-| -------------- | --------------------------------------------------- |
-| **Portugol**   | Linguagem de entrada pedagógica                     |
-| **Parser**     | Interpreta a estrutura do Portugol                  |
-| **IR**         | Núcleo semântico e contrato central do sistema      |
-| **Blockly**    | Representação visual da lógica                      |
-| **Explicação** | Representação didática para facilitar a compreensão |
-| **Arduino**    | Representação técnica derivada da lógica            |
-
-**Importante:** Arduino não é a representação intermediária principal. A **IR é o verdadeiro intermediário** entre a entrada pedagógica e as diferentes representações.
+O foco é permitir que o aluno **entenda a lógica representada pelo código**, em vez de apenas memorizar sintaxe.
 
 ---
 
-## 🧱 Stack
+## 👥 Perfis de usuário
 
-### Core
+A plataforma possui dois níveis principais de acesso.
+
+### 👨‍🎓 Aluno
+
+O aluno pode:
+
+- cadastrar sua conta;
+- autenticar utilizando Google;
+- acessar seu workspace;
+- criar códigos;
+- editar códigos;
+- visualizar códigos em blocos;
+- visualizar a representação Arduino;
+- salvar projetos;
+- excluir seus próprios projetos;
+- retornar posteriormente aos projetos salvos.
+
+Cada aluno possui acesso somente aos seus próprios projetos.
+
+### 👨‍💼 Administrador
+
+O administrador possui funções de gerenciamento dos alunos:
+
+- visualizar alunos cadastrados;
+- adicionar cadastro de aluno;
+- excluir cadastro de aluno;
+- consultar informações básicas dos alunos;
+- acessar a área administrativa.
+
+As operações administrativas devem ser protegidas por autorização no servidor.
+
+---
+
+## 🔐 Autenticação e autorização
+
+A autenticação utiliza **Google OAuth**.
+
+O fluxo esperado é:
+
+```text
+Aluno
+  ↓
+Login com Google
+  ↓
+Autenticação
+  ↓
+Identificação do usuário
+  ↓
+Perfil / Role
+  ↓
+Workspace
+```
+
+A aplicação diferencia pelo menos:
+
+```text
+ADMIN
+ALUNO
+```
+
+### Regra fundamental
+
+A interface nunca deve ser considerada responsável pela autorização.
+
+Esconder um botão de administrador **não é uma regra de segurança**.
+
+Toda operação sensível deve validar a permissão no backend.
+
+---
+
+## 🧩 Workspace
+
+O workspace é o ambiente principal de desenvolvimento do aluno.
+
+Cada projeto salvo pertence a um usuário.
+
+### Operações
+
+```text
+Criar
+  ↓
+Editar
+  ↓
+Salvar
+  ↓
+Reabrir
+  ↓
+Editar novamente
+  ↓
+Excluir
+```
+
+O aluno não deve conseguir acessar, editar ou excluir projetos pertencentes a outro usuário.
+
+---
+
+## 🔄 Representação da linguagem
+
+O núcleo educacional continua baseado na transformação entre diferentes representações.
+
+```text
+                    ┌─── Blockly
+                    │
+Código ──→ Parser ──→ IR
+                    │
+                    └─── Arduino
+```
+
+A **IR — Intermediate Representation** permanece como o contrato semântico central.
+
+### Responsabilidade de cada camada
+
+| Camada  | Responsabilidade                    |
+| ------- | ----------------------------------- |
+| Código  | Entrada da lógica                   |
+| Parser  | Interpretar o código                |
+| IR      | Representar semanticamente a lógica |
+| Blockly | Representação visual                |
+| Arduino | Representação técnica               |
+
+O Blockly e o código Arduino não devem possuir interpretações independentes da lógica.
+
+Ambos devem ser derivados da mesma IR.
+
+---
+
+# 🏗️ Arquitetura
+
+A arquitetura passa a possuir dois grandes domínios:
+
+```text
+┌──────────────────────── FRONTEND ────────────────────────┐
+│                                                          │
+│  React + Vite + TypeScript                               │
+│                                                          │
+│  Google Login                                             │
+│  Workspace                                                │
+│  Editor                                                   │
+│  Blockly                                                  │
+│  Arduino                                                  │
+│                                                          │
+└──────────────────────────┬───────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────── BACKEND ─────────────────────────┐
+│                                                          │
+│  Authentication                                          │
+│  Authorization                                           │
+│  Users                                                   │
+│  Projects                                                │
+│  Admin                                                   │
+│                                                          │
+└──────────────────────────┬───────────────────────────────┘
+                           │
+                           ▼
+                       Database
+```
+
+A parte de interpretação e visualização pode continuar sendo executada no navegador.
+
+A persistência e as regras de acesso exigem infraestrutura de backend.
+
+---
+
+# 🛠️ Stack
+
+## Frontend
 
 - **React**
 - **Vite**
 - **TypeScript**
-
-TypeScript é obrigatório para garantir um contrato consistente da IR e permitir o desenvolvimento paralelo entre diferentes partes do sistema.
-
-### Estado
-
 - **Zustand**
-
-Responsável pelo estado central da aplicação, incluindo:
-
-- código Portugol;
-- IR gerada;
-- nós selecionados;
-- sincronização entre representações;
-- erros pedagógicos.
-
-### Editor
-
 - **Monaco Editor**
-- `@monaco-editor/react`
-
-Utilizado como editor de código no navegador, com suporte a syntax highlighting específico para o subconjunto educacional de Portugol.
-
-### Parser
-
-A estratégia de parsing utiliza:
-
-- **Chevrotain**, ou
-- **Recursive Descent Parser em TypeScript**
-
-A escolha deve considerar a complexidade real da linguagem educacional. Para um subconjunto restrito de Portugol, um parser manual pode ser suficiente e reduzir dependências.
-
-### Blocos visuais
-
 - **Google Blockly**
-- `blockly`
-
-O Blockly funciona inteiramente no navegador e permite criar blocos personalizados a partir da IR.
-
-### UI
-
 - **Tailwind CSS**
 - **Lucide React**
 
-A interface prioriza simplicidade, responsividade e baixa complexidade visual.
+## Parser
 
-### Deploy
+Uma das seguintes estratégias:
 
-- **Vercel**
+- **Chevrotain**
+- Recursive Descent Parser em TypeScript
 
-A aplicação é **100% client-side**, eliminando a necessidade de backend, banco de dados ou infraestrutura de processamento.
+A escolha deve considerar a complexidade real da linguagem suportada.
 
----
+## Backend
 
-## 🏗️ Arquitetura
+O backend deve fornecer:
 
-A arquitetura é baseada em separação clara de responsabilidades:
+- autenticação;
+- autorização;
+- usuários;
+- roles;
+- persistência dos projetos;
+- operações administrativas.
+
+> A implementação concreta do backend deve ser definida como uma decisão arquitetural do projeto antes da implementação.
+
+## Banco de dados
+
+O banco deve armazenar, no mínimo:
 
 ```text
-Portugol
-   │
-   ▼
-Parser
-   │
-   ▼
-AST / Semantic Analysis
-   │
-   ▼
-Intermediate Representation (IR)
-   │
-   ├──────────────► Blockly
-   │
-   ├──────────────► Explanation
-   │
-   └──────────────► Arduino
+User
+ ├── id
+ ├── name
+ ├── email
+ ├── avatar
+ └── role
+
+Project
+ ├── id
+ ├── userId
+ ├── name
+ ├── sourceCode
+ ├── ir
+ ├── createdAt
+ └── updatedAt
 ```
-
-A regra arquitetural principal é:
-
-> **Nenhuma camada de visualização deve interpretar Portugol diretamente.**
-
-Todos os consumidores devem trabalhar a partir da IR.
-
-Isso permite que novos formatos de representação sejam adicionados sem modificar o parser ou a linguagem de entrada.
 
 ---
 
-## 📁 Organização do projeto
+# 📁 Estrutura
 
 ```text
 src/
 ├── app/
-│   ├── App.tsx
-│   └── main.tsx
 │
 ├── components/
+│   ├── auth/
 │   ├── editor/
 │   ├── blocks/
-│   ├── explanation/
 │   ├── arduino/
+│   ├── workspace/
+│   ├── admin/
 │   └── shared/
 │
 ├── core/
@@ -183,222 +277,225 @@ src/
 │   ├── semantic/
 │   ├── generators/
 │   │   ├── blocks/
-│   │   ├── arduino/
-│   │   └── explanation/
+│   │   └── arduino/
 │   └── errors/
 │
 ├── store/
-│   └── app-store.ts
+│
+├── services/
+│   ├── auth/
+│   ├── users/
+│   └── projects/
 │
 ├── types/
-├── styles/
+│
 └── tests/
 ```
 
 ---
 
-## 🧠 Metodologia de desenvolvimento
+# 📚 Telas
 
-O projeto segue uma abordagem **incremental, orientada a testes e contratos**, inspirada em práticas de **Extreme Programming (XP)**.
+A aplicação deve possuir, inicialmente:
 
-### Princípios
+### 1. Cadastro / Login
 
-- **TDD**
+Entrada da plataforma com autenticação Google.
+
+```text
+Login com Google
+       ↓
+Identificação
+       ↓
+Aluno → Workspace
+Admin → Administração
+```
+
+### 2. Workspace
+
+Área principal do aluno.
+
+Deve permitir:
+
+- criar projeto;
+- abrir projeto;
+- editar código;
+- salvar;
+- excluir;
+- visualizar blocos;
+- visualizar Arduino.
+
+### 3. Administração
+
+Área exclusiva do administrador.
+
+Deve permitir:
+
+```text
+Alunos
+ ├── Listar
+ ├── Adicionar
+ └── Excluir
+```
+
+---
+
+# 🧠 Metodologia de desenvolvimento
+
+O projeto utiliza desenvolvimento **incremental, orientado a testes e contratos**, inspirado em práticas de **Extreme Programming (XP)**.
+
+Princípios:
+
+- TDD;
 - pequenos incrementos;
 - commits pequenos;
 - integração contínua;
 - refatoração contínua;
-- contratos explícitos;
 - baixo acoplamento;
-- simplicidade antes de abstração;
+- contratos explícitos;
+- simplicidade;
 - desenvolvimento paralelo;
 - decisões técnicas justificadas.
 
-### Regra principal
+### Regra
 
-> **Complexidade que ainda não foi entregue é melhor do que complexidade quebrada.**
-
-Não criar abstrações, funcionalidades ou infraestrutura antes que exista uma necessidade real.
+> **Não implementar complexidade antes de existir uma necessidade real.**
 
 ---
 
-## 👥 Desenvolvimento paralelo
+# 🔗 Contratos
 
-O projeto foi estruturado para permitir o trabalho simultâneo de até **5 desenvolvedores**.
+A IR continua sendo o principal contrato técnico do domínio de programação.
 
-| Responsabilidade | Área                           |
-| ---------------- | ------------------------------ |
-| Dev 1            | Parser / AST / Semântica       |
-| Dev 2            | IR / Tipos / Contratos         |
-| Dev 3            | Blockly / Representação visual |
-| Dev 4            | Arduino / Explicações          |
-| Dev 5            | Frontend / UX / Integração     |
-
-A **IR funciona como contrato central** entre as equipes.
-
-Isso permite que cada frente seja desenvolvida utilizando mocks da IR antes da integração completa.
-
----
-
-## 🧪 Estratégia de testes
-
-Os testes acompanham as principais camadas do sistema:
+Porém, o sistema passa a possuir outros contratos:
 
 ```text
+Auth Contract
+     ↓
+User / Role Contract
+     ↓
+Project Contract
+     ↓
+IR Contract
+     ↓
+Blockly / Arduino
+```
+
+Cada contrato deve ser definido antes da implementação das funcionalidades que dependem dele.
+
+---
+
+# 🧪 Testes
+
+Os testes devem cobrir principalmente:
+
+### Autenticação
+
+- login;
+- sessão;
+- logout;
+- usuário não autenticado.
+
+### Autorização
+
+- aluno acessando workspace;
+- admin acessando administração;
+- aluno tentando acessar função administrativa;
+- usuário tentando acessar projeto de outro usuário.
+
+### Projetos
+
+- criar;
+- salvar;
+- editar;
+- recuperar;
+- excluir.
+
+### Núcleo de programação
+
+```text
+Código
+ ↓
 Parser
+ ↓
+IR
+ ↓
+Blockly
+ ↓
+Arduino
+```
+
+A transformação deve preservar a mesma lógica.
+
+---
+
+# 🚦 Desenvolvimento incremental
+
+O desenvolvimento deve começar por uma fatia vertical funcional.
+
+## Vertical Slice 1
+
+```text
+Google Login
+     ↓
+Aluno
+     ↓
+Workspace
+     ↓
+Criar projeto
+     ↓
+Escrever código
+     ↓
+Salvar
+     ↓
+Reabrir
+```
+
+Depois:
+
+```text
+Código
   ↓
-Semantic Analysis
+Parser
   ↓
 IR
   ↓
-Generators
+Blockly
   ↓
-UI / Integration
+Arduino
 ```
 
-Prioridades:
-
-1. parser e regras sintáticas;
-2. transformação para IR;
-3. geração de blocos;
-4. geração de Arduino;
-5. explicações;
-6. integração entre as representações;
-7. comportamento da interface.
-
-O objetivo é garantir que diferentes representações mantenham **a mesma lógica semântica**.
-
----
-
-## 🚦 Desenvolvimento por fatias verticais
-
-O desenvolvimento deve começar por um fluxo mínimo funcionando de ponta a ponta.
-
-### Primeiro Vertical Slice
+Depois:
 
 ```text
-escreva("Olá, mundo!")
-        ↓
-     Portugol
-        ↓
-      Parser
-        ↓
-        IR
-     ↙   ↓   ↘
-Blockly Explicação Arduino
+Admin
+  ↓
+Listar alunos
+  ↓
+Adicionar aluno
+  ↓
+Excluir aluno
 ```
 
-Somente depois desse fluxo estar funcional devem ser adicionados novos conceitos.
+---
 
-### Evolução dos conceitos
+# 👨‍💻 Desenvolvimento paralelo
 
-1. sequência;
-2. variáveis;
-3. atribuição;
-4. entrada e saída;
-5. condições;
-6. repetição;
-7. funções;
-8. conceitos específicos de Arduino.
+O projeto pode ser dividido entre cinco frentes:
+
+| Desenvolvedor | Responsabilidade                      |
+| ------------- | ------------------------------------- |
+| Dev 1         | Autenticação / usuários / autorização |
+| Dev 2         | Parser / AST / IR                     |
+| Dev 3         | Blockly / representação visual        |
+| Dev 4         | Arduino / generators                  |
+| Dev 5         | Workspace / Admin / UX                |
+
+A integração deve acontecer através de contratos explícitos.
 
 ---
 
-## 📚 Princípios pedagógicos
-
-A interface deve responder constantemente a três perguntas:
-
-### 1. O que está acontecendo?
-
-Explicação simples da lógica.
-
-### 2. Como isso aparece no código?
-
-Relação entre o conceito e o Portugol/Arduino.
-
-### 3. Como posso representar isso visualmente?
-
-Correspondência com os blocos Blockly.
-
-A aplicação deve evitar:
-
-- excesso de informação;
-- mensagens técnicas desnecessárias;
-- erros difíceis de interpretar;
-- interfaces semelhantes a IDEs profissionais;
-- abstrações que dificultem a compreensão inicial.
-
----
-
-## 🚫 Escopo inicial
-
-O projeto **não pretende ser uma IDE completa**.
-
-Fora do escopo inicial:
-
-- compilação real;
-- upload para placas Arduino;
-- controle de hardware;
-- simulador físico;
-- backend;
-- banco de dados;
-- colaboração em tempo real;
-- sistema complexo de usuários;
-- gamificação avançada;
-- suporte irrestrito a qualquer código Arduino.
-
-O foco é:
-
-> **Entender a lógica antes de executar a tecnologia.**
-
----
-
-## 🗺️ Roadmap
-
-### MVP
-
-- [ ] Editor Portugol
-- [ ] Parser
-- [ ] AST
-- [ ] IR
-- [ ] Blocos Blockly
-- [ ] Explicações didáticas
-- [ ] Geração de Arduino
-- [ ] Sincronização entre código e blocos
-- [ ] Erros pedagógicos
-- [ ] Testes automatizados
-- [ ] Deploy client-side
-
-### Evolução
-
-- [ ] Mais estruturas de programação
-- [ ] Destaque bidirecional código ↔ bloco
-- [ ] Exercícios educacionais
-- [ ] Progressão de dificuldade
-- [ ] Feedback pedagógico
-- [ ] Novas representações da IR
-
----
-
-## 📐 Golden Path
-
-Toda nova funcionalidade deve respeitar, sempre que possível:
-
-```text
-PORTUGOL
-   ↓
- PARSER
-   ↓
-   IR
- ┌─┼───────────────┐
- ↓ ↓               ↓
-BLOCOS EXPLICAÇÃO ARDUINO
-```
-
-O objetivo é manter a **IR como fonte semântica única da verdade**.
-
----
-
-## 🤖 Desenvolvimento com IA
+# 🤖 Desenvolvimento com IA
 
 Agentes de IA podem atuar como:
 
@@ -406,51 +503,132 @@ Agentes de IA podem atuar como:
 - revisor técnico;
 - gerador de testes;
 - auxiliar de documentação;
-- professor técnico;
-- identificador de riscos e inconsistências.
+- identificador de riscos;
+- professor técnico.
 
-A IA **não deve decidir arquitetura sozinha**.
+A IA não deve introduzir arquitetura ou infraestrutura sem justificar:
 
-Antes de introduzir uma nova abstração ou dependência, deve responder:
-
-1. Qual problema real isso resolve?
-2. Por que a solução atual não é suficiente?
-3. Qual o custo de manutenção?
-4. Isso aumenta ou reduz o acoplamento?
-5. Existe uma solução mais simples?
+1. qual problema resolve;
+2. por que é necessária;
+3. impacto na complexidade;
+4. alternativas mais simples;
+5. impacto na manutenção.
 
 A decisão arquitetural permanece humana.
 
 ---
 
-## 📌 Filosofia
+# 🚫 Fora do escopo
 
-O projeto parte de uma ideia simples:
+Neste momento não fazem parte do projeto:
 
-> **Programar não deve começar pela sintaxe. Deve começar pela compreensão da lógica.**
+- compilação real de Arduino;
+- upload para hardware;
+- simulador físico;
+- marketplace;
+- colaboração em tempo real;
+- chat entre alunos;
+- gamificação avançada;
+- avaliação automática complexa;
+- geração irrestrita de código Arduino.
 
-Portugol fornece uma entrada acessível.
+O foco é:
 
-A IR preserva o significado.
-
-Blockly torna a lógica visual.
-
-As explicações tornam o conceito compreensível.
-
-Arduino conecta a lógica com uma representação técnica.
-
-Assim, diferentes representações deixam de competir entre si e passam a explicar **a mesma ideia de diferentes maneiras**.
+> **Autenticar → Criar → Visualizar → Compreender → Salvar → Continuar aprendendo.**
 
 ---
 
-## 📄 Status
+# 🗺️ Roadmap
+
+## MVP
+
+- [ ] Google Authentication
+- [ ] Cadastro de aluno
+- [ ] Controle de roles
+- [ ] Workspace
+- [ ] Criar projeto
+- [ ] Editar projeto
+- [ ] Salvar projeto
+- [ ] Excluir projeto
+- [ ] Parser
+- [ ] IR
+- [ ] Blockly
+- [ ] Representação Arduino
+- [ ] Tela administrativa
+- [ ] Adicionar aluno
+- [ ] Excluir aluno
+- [ ] Controle de acesso
+- [ ] Testes automatizados
+- [ ] Deploy
+
+## Evolução
+
+- [ ] Mais estruturas da linguagem
+- [ ] Destaque código ↔ bloco
+- [ ] Explicações pedagógicas
+- [ ] Exercícios
+- [ ] Progressão de dificuldade
+- [ ] Feedback educacional
+- [ ] Métricas de aprendizagem
+
+---
+
+# 📐 Golden Path
+
+O fluxo principal do produto é:
+
+```text
+GOOGLE AUTH
+     ↓
+USUÁRIO
+     ↓
+WORKSPACE
+     ↓
+PROJETO
+     ↓
+CÓDIGO
+     ↓
+PARSER
+     ↓
+IR
+   ↙   ↘
+BLOCKLY  ARDUINO
+     ↓
+   SALVAR
+```
+
+A autenticação e persistência sustentam o produto.
+
+A IR sustenta o núcleo de interpretação.
+
+Blockly e Arduino são diferentes representações da mesma lógica.
+
+---
+
+# 📌 Filosofia
+
+O projeto não pretende apenas transformar código em blocos.
+
+Seu objetivo é criar uma ponte entre:
+
+```text
+COMPREENSÃO
+     ↓
+LÓGICA
+     ↓
+CÓDIGO
+     ↓
+REPRESENTAÇÃO VISUAL
+     ↓
+TECNOLOGIA
+```
+
+O aluno deve conseguir visualizar a relação entre aquilo que escreveu e aquilo que o programa representa.
+
+---
+
+## Status
 
 **Em desenvolvimento — MVP**
 
-Projeto experimental/educacional focado em **ensino de lógica de programação através de múltiplas representações**.
-
----
-
-## 📜 Licença
-
-A definir.
+Plataforma educacional para aprendizagem de programação através de **código, blocos visuais e representação Arduino**, com autenticação, workspaces persistentes e administração de alunos.
