@@ -21,8 +21,8 @@ description: "Task list for feature 002-auth-profile-foundations implementation"
 
 **Purpose**: Inicialização da estrutura de monorepo Next.js, workspaces npm, ferramentas de linting e testes.
 
-- [ ] T001 Configure root `package.json` with npm workspaces (`apps/web`, `packages/auth`, `packages/database`) in `package.json`
-- [ ] T002 Initialize `packages/database` workspace with TypeScript configuration in `packages/database/package.json` and `packages/database/tsconfig.json`
+- [X] T001 Configure root `package.json` with npm workspaces (`apps/web`, `packages/auth`, `packages/database`) in `package.json`
+- [X] T002 Initialize `packages/database` workspace with TypeScript configuration in `packages/database/package.json` and `packages/database/tsconfig.json`
 - [ ] T003 [P] Initialize `packages/auth` workspace with TypeScript configuration in `packages/auth/package.json` and `packages/auth/tsconfig.json`
 - [ ] T004 [P] Initialize `apps/web` Next.js 14+ App Router workspace with dependencies (`@supabase/ssr`, `@supabase/supabase-js`, `lucide-react`, `zod`, `tailwind`) in `apps/web/package.json` and `apps/web/tsconfig.json`
 - [ ] T005 [P] Configure Tailwind CSS and PostCSS for web workspace in `apps/web/tailwind.config.ts` and `apps/web/postcss.config.mjs`
