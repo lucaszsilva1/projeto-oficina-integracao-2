@@ -486,15 +486,15 @@ Métricas monitoradas:
 ## Project Status & Backlog
 
 ### Project Status
-- **Current Phase**: DISCOVERY
-- **Current Objective**: Definição do escopo, requisitos e arquitetura inicial do projeto da disciplina
-- **Current Sprint / Milestone**: Milestone 1 — Setup & Discovery
+- **Current Phase**: Phase 2 — Design → Phase 3 — Implementation
+- **Current Objective**: Transição de Design para Implementação da Sprint 1 da Code Representation Platform
+- **Current Sprint / Milestone**: Sprint 1
 - **Current Priorities**:
-  1. Ratificar a constituição do projeto e governança inicial
-  2. Definir problema, objetivos e requisitos do sistema (/speckit-specify)
-  3. Definir arquitetura e stack tecnológica (/speckit-plan)
+  1. Validar e alinhar design artifacts e contratos (Phase 2)
+  2. Iniciar implementação incremental dos componentes prioritários da Sprint 1 (Phase 3)
+  3. Garantir cobertura de testes (TDD) e conformidade com os Quality Gates
 - **Blockers**: Nenhum bloqueio no momento.
-- **Open Decisions**: Escolha da stack de desenvolvimento e arquitetura base do sistema.
+- **Open Decisions**: Validação das primeiras tarefas de implementação da Sprint 1.
 
 ### Backlog
 | ID | Item | Priority | Dependency | Status |
