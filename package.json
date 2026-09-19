@@ -1,0 +1,23 @@
+{
+  "name": "projeto-oficina-integracao-2",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Plataforma Educativa de Programação em Blocos (ELLP) - Projeto de extensão universitária UTFPR",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "author": "Lucas Souza Silva",
+  "license": "MIT"
+}
